@@ -2,35 +2,73 @@ package main
 
 import (
 	"fmt"
-	"strconv"
+
+	"regexp"
+)
+
+var (
+	forbiddenRe = regexp.MustCompile(`i|l|o`)
 )
 
 func main() {
 	fmt.Println("--- Part One ---")
-	fmt.Println(Part1("1321131112", 40))
+	fmt.Println(Part1("hxbxwxba"))
 
 	fmt.Println("--- Part Two ---")
-	fmt.Println(Part1("1321131112", 50))
+	fmt.Println(Part1("hxbxxzaa"))
+
 }
 
-func Part1(inp string, iter int) int {
-	for i := 0; i < iter; i++ {
-		inp = lss(inp)
+func Part1(s string) string {
+	for !isValid(s) {
+		s = nextPword(s)
 	}
-	return len(inp)
+	return s
 }
 
-func lss(s string) (r string) {
-	c, times := s[0], 1
-	for i := 1; i < len(s); i++ {
-		d := s[i]
-		if d == c {
-			times += 1
-			continue
+func nextPword(s string) string {
+	sArray := []byte(s)
+	for i := len(s) - 1; i >= 0; i-- {
+		c := sArray[i]
+		if c != 'z' {
+			sArray[i] = byte(int(c) + 1)
+			break
+		} else {
+			sArray[i] = 'a'
 		}
-		r += strconv.Itoa(times) + string(c)
-		c = d
-		times = 1
 	}
-	return r + strconv.Itoa(times) + string(c)
+	return string(sArray)
+}
+
+func isValid(s string) bool {
+	return !containsForbiddenLetters(s) && containsRepeatingLetters(s) && hasConsecutiveLetters(s)
+}
+
+func containsForbiddenLetters(s string) bool {
+	return forbiddenRe.MatchString(s)
+}
+
+func containsRepeatingLetters(s string) bool {
+	repeatingLetters := 0
+	i := 0
+	for i < len(s)-1 {
+		if s[i] == s[i+1] {
+			repeatingLetters += 1
+			i += 2
+		} else {
+			i += 1
+		}
+	}
+	return repeatingLetters >= 2
+}
+
+func hasConsecutiveLetters(s string) bool {
+	for i := 0; i < len(s)-2; i++ {
+		d1 := int(s[i+1]) - int(s[i])
+		d2 := int(s[i+2]) - int(s[i+1])
+		if (d1 == 1) && (d2 == 1) {
+			return true
+		}
+	}
+	return false
 }
