@@ -34,6 +34,7 @@ func Part1(filename string) []int {
 		"goldfish":    5,
 		"trees":       3,
 		"cars":        2,
+		"perfumes":    1,
 	}
 	possibles := []int{}
 	for i, line := range lines {
