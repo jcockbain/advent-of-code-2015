@@ -31,7 +31,6 @@ func Part1(filename string) int {
 	}
 
 	return total
-
 }
 
 func toInt(s string) int {
