@@ -5,12 +5,7 @@ import (
 	"fmt"
 
 	"math"
-	"regexp"
 	"strconv"
-)
-
-var (
-	re = regexp.MustCompile(`[a-z]*: (\d+)`)
 )
 
 func main() {
