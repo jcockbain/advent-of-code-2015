@@ -150,12 +150,9 @@ func findLeastExpensiveWinner(boss player, hp int) int {
 	}
 
 	backtrack = func(play *player, idx int, cost int) {
-		if idx > 3 {
-			return
-		}
 		if isSolution(*play) {
 			processSolution(cost)
-		} else {
+		} else if idx <= 3 {
 			candidates := constructCandidates(idx)
 			if idx != 0 {
 				backtrack(play, idx+1, cost)
@@ -211,25 +208,24 @@ func findMostExpensiveLoser(boss player, hp int) int {
 	}
 
 	backtrack = func(a []*resource, play *player, idx int, cost int) {
-		if idx > 3 {
-			return
-		}
 		if isSolution(*play) {
 			processSolution(cost)
 		}
-		candidates := constructCandidates(a, idx)
-		if idx != 0 {
-			backtrack(a, play, idx+1, cost)
-		}
-		for _, c := range candidates {
-			p := (*play)
-			a[idx] = &c
-			p.damage += c.damage
-			p.armor += c.armor
-			backtrack(a, &p, idx+1, cost+c.cost)
-			a[idx] = nil
-			p.damage -= c.damage
-			p.armor -= c.armor
+		if idx <= 3 {
+			candidates := constructCandidates(a, idx)
+			if idx != 0 {
+				backtrack(a, play, idx+1, cost)
+			}
+			for _, c := range candidates {
+				p := (*play)
+				a[idx] = &c
+				p.damage += c.damage
+				p.armor += c.armor
+				backtrack(a, &p, idx+1, cost+c.cost)
+				a[idx] = nil
+				p.damage -= c.damage
+				p.armor -= c.armor
+			}
 		}
 	}
 	a := make([]*resource, 4)
